@@ -1,0 +1,19 @@
+.logo{
+  width: 600px;
+  margin: 1em 0 2em 0;
+}
+
+.flex_center{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-flow: column;
+}
+
+.bold{
+  font-weight: bold;
+}
+
+.fs_step{
+  font-size: 2em;
+}
