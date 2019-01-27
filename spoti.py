@@ -3,7 +3,7 @@ import spotipy.util as util
 import musixmatch as mm
 from spotipy import oauth2
 from flask import Flask, render_template, request
-from key import C_ID, SECRET, EMAIL, MMKEY
+from key import C_ID, SECRET, MMKEY
 import requests as req
 import json
 
@@ -31,42 +31,39 @@ def getUsername():
 username = "naginichen"
 
 def runall():
-    authorize()
     token = util.prompt_for_user_token(username, 'playlist-read-private playlist-read-collaborative', client_id=C_ID, client_secret=SECRET, redirect_uri=redirect)
-    getPlayLists(token)
-    getChoiceList(name_to_id[list(name_to_id.keys())[0]], token)
+    if token:
+        sp = spotipy.Spotify(auth=token)
+    else:
+        print("uhoh")
+    # authorize_path(a, sp)
+    getPlayLists(sp)
+    getChoiceList(name_to_id[list(name_to_id.keys())[0]], sp)
     getLyrics()
 
-def authorize():
-    auth = oauth2.SpotifyOAuth(client_id=C_ID, client_secret=SECRET, redirect_uri=redirect, scope=scoped, cache_path='.spotipyoauthcache')
-    print(auth.get_authorize_url())
 
 
-def getPlayLists(play_token):
-    if play_token:
-        sp = spotipy.Spotify(auth=play_token)
+def getPlayLists(sp):
+    print(sp.user(username))
+    results = sp.current_user_playlists()
+    for i in results['items']:
+        play_names.append(i['name'])
+        name_to_id[i['name']] = i['id']
 
-        print(sp.user(username))
-        results = sp.user_playlists(username)
-        for i in results['items']:
-            play_names.append(i['name'])
-            name_to_id[i['name']] = i['id']
+    return play_names
 
-        return play_names
+def getChoiceList(id, sp):
 
-def getChoiceList(id, play_token):
-    if play_token:
-        sp = spotipy.Spotify(auth=play_token)
-        list = sp.user_playlist_tracks(username, playlist_id=id, limit=2)
+    list = sp.user_playlist_tracks(username, playlist_id=id, limit=2)
 
-        # print(list)
-        for song in list['items']:
-            cur = []
-            cur.append(song['track']['name'])
-            for help in song['track']['artists']:
-                if help['type'] == "artist":
-                    cur.append(help['name'])
-            arttitle.append(cur)
+    # print(list)
+    for song in list['items']:
+        cur = []
+        cur.append(song['track']['name'])
+        for help in song['track']['artists']:
+            if help['type'] == "artist":
+                cur.append(help['name'])
+        arttitle.append(cur)
 
         # print(arttitle)
 
