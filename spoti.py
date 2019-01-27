@@ -1,17 +1,16 @@
 import spotipy
 import spotipy.util as util
 import musixmatch as mm
-from spotipy.oauth2 import SpotifyClientCredentials
+from spotipy import oauth2
 from flask import Flask, render_template, request
 from key import C_ID, SECRET, EMAIL, MMKEY
 import requests as req
 import json
 
 
-spotify = spotipy.Spotify()
-
 mm_url = 'http://api.musixmatch.com/ws/1.1/'
 
+scoped = 'playlist-read-private playlist-read-collaborative'
 
 redirect = "http://localhost/"
 # redirect = "http://google.com/"
@@ -22,25 +21,40 @@ arttitle = []
 all_lyrics = []
 genres = {}
 
+
+
 # get from front
 
 def getUsername():
     return "me"
-username = EMAIL
 
-play_token = util.prompt_for_user_token(username, 'playlist-read-private playlist-read-collaborative', client_id=C_ID, client_secret=SECRET, redirect_uri=redirect)
+username = "naginichen"
 
-def getPlayLists():
+def runall():
+    authorize()
+    token = util.prompt_for_user_token(username, 'playlist-read-private playlist-read-collaborative', client_id=C_ID, client_secret=SECRET, redirect_uri=redirect)
+    getPlayLists(token)
+    getChoiceList(name_to_id[list(name_to_id.keys())[0]], token)
+    getLyrics()
+
+def authorize():
+    auth = oauth2.SpotifyOAuth(client_id=C_ID, client_secret=SECRET, redirect_uri=redirect, scope=scoped, cache_path='.spotipyoauthcache')
+    print(auth.get_authorize_url())
+
+
+def getPlayLists(play_token):
     if play_token:
         sp = spotipy.Spotify(auth=play_token)
-        results = sp.current_user_playlists()
+
+        print(sp.user(username))
+        results = sp.user_playlists(username)
         for i in results['items']:
             play_names.append(i['name'])
             name_to_id[i['name']] = i['id']
 
         return play_names
 
-def getChoiceList(id):
+def getChoiceList(id, play_token):
     if play_token:
         sp = spotipy.Spotify(auth=play_token)
         list = sp.user_playlist_tracks(username, playlist_id=id, limit=2)
@@ -105,8 +119,6 @@ def getLyrics():
 
 
 
-getPlayLists()
-getChoiceList(name_to_id['Edge'])
-getLyrics()
+runall()
 
 # print(all_lyrics)
