@@ -5,6 +5,16 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 
 class App extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      email: "",
+      password: ""
+    }
+  }
+
   render() {
     return (
       <Router>
@@ -18,17 +28,17 @@ class App extends Component {
           password = "";
 
           <div class="form_container">
-            <form class="flex_center" onSubmit={this.Login(userName.state.value, password.state.value)}>
+            <form class="flex_center" onSubmit={this.Login}>
               <label>
                 Username:
                 <input type="text" name="name" />
               </label>
               <label>
                 Password:
-                <input type="Password" name="name" value={userName.state.value}/>
+                <input type="Password" name="name" value={this.state.user}/>
               </label>
 
-                <input type="submit" value="Login" value={password.state.value}/>
+                <input type="submit" value="Login" value={this.state.pass}/>
             </form>
 
             <Route path='/' component={Login}/>
@@ -43,12 +53,8 @@ class App extends Component {
 
 class Login extends Component{
 
-  Username(user, pass){
-
-  }
-
   render() {
-        return (...);
+        return (3);
   }
 
 }
