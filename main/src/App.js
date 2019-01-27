@@ -14,20 +14,24 @@ class App extends Component {
             <p class="fs_step" > To start, please login to your Spotify account. </p>
           </div>
 
+          userName = "";
+          password = "";
+
           <div class="form_container">
-            <form class="flex_center">
+            <form class="flex_center" onSubmit={this.Login(userName.state.value, password.state.value)}>
               <label>
                 Username:
                 <input type="text" name="name" />
               </label>
               <label>
                 Password:
-                <input type="Password" name="name" />
+                <input type="Password" name="name" value={userName.state.value}/>
               </label>
-                <input type="submit" value="Login" />
+
+                <input type="submit" value="Login" value={password.state.value}/>
             </form>
 
-            <Route path='/' component={Playlist}/>
+            <Route path='/' component={Login}/>
 
           </div>
         </div>
@@ -37,14 +41,16 @@ class App extends Component {
 
 }
 
-class Playlist extends Component{
+class Login extends Component{
 
+  Username(user, pass){
 
+  }
 
   render() {
         return (...);
   }
-  
+
 }
 
 
