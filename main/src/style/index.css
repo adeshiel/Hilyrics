@@ -8,3 +8,8 @@ body {
 p{
   color: #FFF;
 }
+
+label{
+  color: #FFF;
+  margin: 10px;
+}

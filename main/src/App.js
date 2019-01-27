@@ -25,20 +25,16 @@ class App extends Component {
           </div>
 
           userName = "";
-          password = "";
 
           <div class="form_container">
             <form class="flex_center" onSubmit={this.Login}>
+
               <label>
-                Username:
-                <input type="text" name="name" />
-              </label>
-              <label>
-                Password:
+                Username: &nbsp;
                 <input type="Password" name="name" value={this.state.user}/>
               </label>
 
-                <input type="submit" value="Login" value={this.state.pass}/>
+                <input type="submit" value="Login"/>
             </form>
 
             <Route path='/' component={Login}/>
@@ -54,7 +50,7 @@ class App extends Component {
 class Login extends Component{
 
   render() {
-        return (3);
+      return (3);
   }
 
 }
