@@ -11,7 +11,6 @@ class App extends Component {
 
     this.state = {
       email: "",
-      password: ""
     }
   }
 
@@ -31,7 +30,7 @@ class App extends Component {
 
               <label>
                 Username: &nbsp;
-                <input type="Password" name="name" value={this.state.user}/>
+                <input type="Password" name="name" value={this.state.email}/>
               </label>
 
                 <input type="submit" value="Login"/>
