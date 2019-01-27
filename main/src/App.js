@@ -49,7 +49,9 @@ class App extends Component {
 class Login extends Component{
 
   render() {
-      return (3);
+    return(
+      fetch("http://localhost:3000/");
+    )
   }
 
 }
