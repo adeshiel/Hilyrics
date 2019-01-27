@@ -1,26 +1,25 @@
 from textgenrnn import textgenrnn 
 
 
-print("Start of code")
+
 textgen = textgenrnn()
-print("Hopefully not stuck")
+
 
 
 class gen:
 
 	
 
-	def __init__(self):
+	def __init__(self, filename):
 		'''Generates file names'''
 		print("start of init")
-		self.file_names = ['not_afraid.txt']
+		self.file_name = filename
 		self.lyrics = []
 
 	def train(self):
 		textgen.reset()
-		for file in self.file_names:
-			print("training started")
-			textgen.train_from_file(file, num_epochs=1, gen_epochs=1)
+		print("training started")
+		textgen.train_from_file(self.file_name, num_epochs=10, gen_epochs=10)
 		textgen.save('lyrics.hdf5')
 
 	def generate_lyrics(self):
@@ -28,9 +27,9 @@ class gen:
 		self.lyrics = textgen.generate(n=20, return_as_list=True, temperature=1.0)
 
 	def write_lyrics(self):
-		file = open("generated_song.txt", "r")
+		file = open("generated_song.txt", "w")
 		for line in self.lyrics:
-			file.write(line)
+			file.write(line + "\n")
 		file.close()
 
 
