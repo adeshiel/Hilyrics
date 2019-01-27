@@ -2,17 +2,18 @@ import spotipy
 import spotipy.util as util
 import musixmatch as mm
 from spotipy import oauth2
-from flask import Flask, render_template, request
+
 from key import C_ID, SECRET, MMKEY
 import requests as req
 import json
+
 
 
 mm_url = 'http://api.musixmatch.com/ws/1.1/'
 
 scoped = 'playlist-read-private playlist-read-collaborative'
 
-redirect = "http://localhost/"
+redirect = "http://localhost:3000/"
 # redirect = "http://google.com/"
 play_names = []
 name_to_id = {}
@@ -25,16 +26,16 @@ genres = {}
 
 # get from front
 
-def getUsername():
-    return "me"
+def selection():
+    return play_names
 
-username = "ashley.deshields.2016@gmail.com"
+# username = "ashley.deshields.2016@gmail.com"
 
-def runall():
+def runall(username):
     authorize()
-    token = util.prompt_for_user_token(username, 'playlist-read-private playlist-read-collaborative', client_id=C_ID, client_secret=SECRET, redirect_uri=redirect)
-    getPlayLists(token)
-    getChoiceList(name_to_id[list(name_to_id.keys())[0]], token)
+    token = util.prompt_for_user_token(username, scope=scoped, client_id=C_ID, client_secret=SECRET, redirect_uri=redirect)
+    getPlayLists(username, token)
+    getChoiceList(name_to_id[list(name_to_id.keys())[0]], token, username)
     lyri = getLyrics()
 
 
@@ -43,7 +44,8 @@ def authorize():
     print(auth.get_authorize_url())
 
 
-def getPlayLists(play_token):
+
+def getPlayLists(username, play_token):
     if play_token:
         sp = spotipy.Spotify(auth=play_token)
 
@@ -55,7 +57,7 @@ def getPlayLists(play_token):
 
         return play_names
 
-def getChoiceList(id, play_token):
+def getChoiceList(id, play_token, username):
     if play_token:
         sp = spotipy.Spotify(auth=play_token)
         list = sp.user_playlist_tracks(username, playlist_id=id, limit=10)
@@ -83,6 +85,7 @@ def getLyrics():
             'q_artist': item[1],
             'apikey': MMKEY,
             'format': 'json',
+            # "f_lyrics_language": "en",
             's_track_rating': 'desc',
             'f_has_lyrics': 'true',
             'page_size':1,
@@ -107,12 +110,13 @@ def getLyrics():
             res2 = req.get(mm_url + 'track.lyrics.get', params=data2)
             jres2 = json.loads(res2.text)
 
-            lyrics = jres2['message']['body']['lyrics']['lyrics_body'][:len(("...  ******* This Lyrics is NOT for Commercial use *******")]
-
+            lyrics = jres2['message']['body']['lyrics']['lyrics_body']
+            print("print")
+            lyrics.replace("******* This Lyrics is NOT for Commercial use *******", "")
             f.write(lyrics)
 
 
-            all_lyrics.append(lyrics[:len("...  ******* This Lyrics is NOT for Commercial use *******")])
+            all_lyrics.replace("******* This Lyrics is NOT for Commercial use *******", "")
 
 
         except:
@@ -124,7 +128,4 @@ def getLyrics():
     return all_lyrics
 
 
-
-
-
-runall()
+runall('ujustgotbernied')

@@ -1,5 +1,16 @@
 from textgenrnn import textgenrnn
 from spoti import *
+from flask import Flask, render_template, request
+from flask_cors import CORS, cross_origin
+import time
+
+app = Flask(__name__)
+CORS(app)
+
+# if __name__ == '__main__':
+#    app.run(
+#        debug=True,
+#    )
 
 
 
@@ -14,11 +25,11 @@ class gen:
 	def __init__(self, filename):
 		'''Generates file names'''
 		print("start of init")
+		# textgen.reset()
 		self.file_name = filename
 		self.lyrics = []
 
 	def train(self):
-		textgen.reset()
 		print("training started")
 		textgen.train_from_file(self.file_name, num_epochs=10, gen_epochs=10)
 		textgen.save('lyrics.hdf5')
@@ -34,14 +45,27 @@ class gen:
 		file.close()
 
 
+@app.route('/<u>')
+def givemetxt(u):
+	main(u)
+	f = open('generated_song.txt',"r")
+	kepp = f.read()
+	f.close()
+	return kepp
 
-def main():
-	runall()
+
+def main(username):
+	runall(username)
+	time.sleep(45)
+	print("here")
 	song = gen('lyrical.txt')
+	print("sleepy")
 	song.train()
 	song.generate_lyrics()
 	song.write_lyrics()
 
 
-if __name__ == "__main__":
-	main()
+
+
+# if __name__ == "__main__":
+# 	main()
