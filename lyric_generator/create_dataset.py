@@ -14,7 +14,15 @@ def gen_2dlist():
 	return song
 
 def gen_lyrics(arg):
-	textgen.train_on_texts(arg, num_epochs=20, gen_epochs=20)
+	textgen.reset()
+	# textgen.train_on_texts(arg, num_epochs=15, gen_epochs=15)
+	textgen.train_from_file('not_afraid.txt', num_epochs=1, gen_epochs=1)
+	textgen.save('lyrics.hdf5')
+	
+def gen():
+	textgen_2 = textgenrnn('lyrics.hdf5')
+	lyrics = textgen_2.generate(n=20, return_as_list=True, temperature=1.0)
+	print(lyrics)
 
 
 
@@ -41,6 +49,7 @@ def main():
 	song = gen_2dlist()
 	print(type(song))
 	gen_lyrics(song)
+	gen()
 	# tensor = my_func(song)
 	# print(tensor)
 	# new_model()
